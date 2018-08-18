@@ -7,7 +7,8 @@ class User extends Validate{
 	protected $rule = [
 		'username' => 'require|min:3|max:30|unique:User',
 		'password' => 'require',
-		'repassword' => 'require|confirm:password'
+		'repassword' => 'require|confirm:password',
+		'captcha' => 'require|captcha'
 	];
 	
 	//定义错误信息
@@ -20,14 +21,17 @@ class User extends Validate{
 		//密码验证错误信息
 		'password.require' => '密码不能为空',
 		'repassword.require' => '确认密码不能为空',
-		'repassword.confirm' => '两次密码不一致'
+		'repassword.confirm' => '两次密码不一致',
+		'captcha.require' => '请填写验证码',
+		'captcha.captcha' => '验证码错误'
 		
 	];
 	
 	//定义场景
 	protected $scene = [
 		'add' => ['username','password','repassword'],
-		//'upd' => ['title','cate_id']
+		'upd' => ['password','repassword'=>'require|confirm:password'],
+		'login' => ['username'=>'require|min:3|max:30','password','captcha']
 	];
 }
 ?>

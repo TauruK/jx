@@ -25,7 +25,14 @@ Route::group('admin',function(){
 	
 	//后台登录路由
 	Route::any('public/login','admin/public/login');
+	Route::get('public/logout','admin/public/logout');
 	
 	//后台用户管理页
+	Route::get('user/index','admin/user/index');
 	Route::any('user/add','admin/user/add');
+	Route::any('user/upd','admin/user/upd');
+	Route::get('user/del','admin/user/del');
+	
+	//权限相关页路由
+	Route::any('auth/add','admin/auth/add');
 });

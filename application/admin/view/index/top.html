@@ -33,10 +33,10 @@
     </ul>
     <div class="topright">
         <ul>
-            <li><a href="login.html" target="_parent">退出</a></li>
+            <li><a href="{:url('/admin/public/logout')}" target="_parent">退出</a></li>
         </ul>
         <div class="user">
-            <span>欢迎您，admin</span>
+            <span>欢迎您，{:session('username')}</span>
         </div>
     </div>
 </body>

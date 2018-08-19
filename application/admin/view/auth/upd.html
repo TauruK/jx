@@ -29,7 +29,7 @@
             <ul class="forminfo">
                 <li>
                     <label>权限名</label>
-                    <input name="auth_name" placeholder="请输权限名" type="text" class="dfinput" /><i>名称不能超过30个字符</i>
+                    <input name="auth_name" value="{$authNow['auth_name']}" placeholder="请输权限名" type="text" class="dfinput" /><i>名称不能超过30个字符</i>
                 </li>
                 <li>
                     <label>父级权限</label>
@@ -43,19 +43,23 @@
                 </li>
                 <li>
                     <label>控制器名</label>
-                    <input name="auth_c" placeholder="请输入控制器名" type="text" class="dfinput" />
+                    <input name="auth_c" value="{$authNow['auth_a']}" placeholder="请输入控制器名" type="text" class="dfinput" />
                 </li>
                  <li>
                     <label>方法名</label>
-                    <input name="auth_a" placeholder="请输入方法名" type="text" class="dfinput" />
+                    <input name="auth_a" value="{$authNow['auth_c']}" placeholder="请输入方法名" type="text" class="dfinput" />
                 </li>
             </ul>
                     <label>&nbsp;</label>
                     <input name="" id="btnSubmit" type="submit" class="btn" value="添加" />
+        			<input name="auth_id" type="hidden" value="{$authNow['auth_id']}" />
         </form>
     </div>
 </body>
 <script>
+	//默认编辑选中
+	$("[name='pid']").val({$authNow['pid']});
+	
     $("[name='pid']").change(function(){
     	//先清空控制器与方法名的控件的disabled属性
     	$("input[name='auth_c'],input[name='auth_a'").attr('readonly',false);

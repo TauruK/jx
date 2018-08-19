@@ -19,6 +19,16 @@ class Auth extends Model{
 				unset($auth['auth_a']);
         	}
         });
+		
+		//更新前钩子
+        Auth::event('before_update', function ($auth) {
+        	//在完成新增前先判断权限是否为顶级,如果为顶级则不需要添加控制器与方法
+        	if($auth['pid']==0){
+        		//清空控制器与方法字段值
+        		$auth['auth_c']='';
+				$auth['auth_a']='';
+        	}
+        });
 	}
 	
 	//递归重组排序查询出来的权限方法

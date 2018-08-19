@@ -34,5 +34,10 @@ Route::group('admin',function(){
 	Route::get('user/del','admin/user/del');
 	
 	//权限相关页路由
+	Route::get('auth/index','admin/auth/index');
 	Route::any('auth/add','admin/auth/add');
+	Route::any('auth/upd','admin/auth/upd');
+	
+	//角色相关路由
+	Route::any('role/add','admin/role/add');
 });

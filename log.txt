@@ -1,0 +1,79 @@
+1.部署thinkPHP到项目目录
+2.开启重写模式
+	1)在apache 的httpd.conf中开启mod_rewrite.so模块
+	2)在[项目根目录]/Public/找到.htaccess文件 在index.php后边加”?”号
+3.在httpd-vhosts.conf 虚拟机配置中项中加入 AllowOverride All---表示允许访问重写规则，重启apache
+
+//--------------------路由配置---------------------------------------
+/************rule分组批量路由注册(推荐用这种)***********************/
+Route::group('index',function(){
+	Route::rule([
+		
+		'/index/index' => 'index/index/index',
+		'/index/aa/:id/:name' => 'index/index/aa'
+	
+	]);
+});
+
+/**********************各种路由演示**********************************/
+//路由定义
+use \think\Route;
+/**********rule单条路由注册***************/
+/*Route::rule('/','index/index/index');
+Route::rule('index/test','index/test/index');*/
+
+/************rule批量(多条)路由注册***************/
+/*Route::rule([
+
+	'/' => 'index/index/index',
+	'index/test' => 'index/test/index',
+	'index/index/aa' => 'index/index/aa',
+	'admin/test/test/[:id]' => 'admin/test/test'
+
+]);*/
+
+/************rule分组路由注册***********************/
+/*Route::group('index',function(){
+	
+	Route::rule('/index/index','index/index/index');
+	Route::rule('/index/aa/:id/:name','index/index/aa');
+	Route::rule('/test','index/test/index');
+	
+});
+Route::group('admin',function(){
+	
+	Route::rule('/test/test','admin/test/test');
+	
+});*/
+/************rule分组批量路由注册(推荐用这种)***********************/
+Route::group('index',function(){
+	Route::rule([
+		
+		'/index/index' => 'index/index/index',
+		'/index/aa/:id/:name' => 'index/index/aa'
+	
+	]);
+});
+
+/************************验证表单步骤*********************/
+1.判断是否是POST请求(表单提交)
+2.接收POST数据
+3.验证POST数据
+	使用TP验证器验证数据,并过滤数据
+	1)先设置验证规则
+	2)定义错误信息
+	3)实例化Validate类
+	4)调用Validate实例的check方法进行验证
+	5)判断验证结果
+	6)如果验证不通过调用Validate实例的getError方法获取错误信息并显示
+4.调用模型判断数据与数据库的数据是否匹配
+5.根据匹配结果做相应处理
+/**************************一种更简单的操作流程步骤(推荐)*******************/
+一种更简单的操作流程步骤就是使用TP5的验证器
+1.判断请求类型
+2.接收请求数据
+3.使用验证器验证请求数据
+4.操作数据新增或更新入库
+------操作入库前操作：执行这步操作时还可以判断是否要对请求数据进行处理，如果要就要在新增或更新事件前做相应处理（这个操作常用）
+------操作入库后操作：执行完新增或更新数据入库后还可以触发执行一个事件后处理，这个操作一般比较少用
+

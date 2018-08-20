@@ -29,7 +29,7 @@ class CommonController extends Controller{
 		if(!in_array($nowVisit, $auth)){
 			//$this->error('你没有权限哦','/admin/index/index');
 			//如果不在访问权限内
-			$this->redirect('/admin/index/index');
+			$this->error('你没有权限哦');
 		}
 		//dump($nowVisit);
 	}

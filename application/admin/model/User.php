@@ -1,6 +1,8 @@
 <?php
 namespace app\admin\model;
 use think\Model;
+use app\admin\model\Role;
+use app\admin\model\Auth;
 class User extends Model{
 	// 数据表主键 复合主键使用数组定义 不设置则自动获取
     protected $pk = "user_id";
@@ -44,10 +46,46 @@ class User extends Model{
 			return '密码错误';
 		}
 		
+		//调用初始化权限方法
+		User::_initAuth($user['role_id']);	
+
 		//如果上面的验证都通过允许用户登录,设置用户session数据,并返回true
 		session('user_id',$user['user_id']);
 		session('username',$user['username']);
 		return true;
+	}
+
+	//定义私有初始化权限方法
+	private static function _initAuth($role_id){
+		
+		//登录查询用户角色信息
+		$role = Role::find($role_id)->toArray();
+		//判断是否是超级管理员
+		if($role['auth_ids_list'] == '*'){
+			//查询出所有权限信息
+			$auth = Auth::select()->toArray();
+		}else{
+			//不是超级管理员查询出此用户的所属权限
+			$auth = Auth::where('auth_id','in',$role['auth_ids_list'])->select()->toArray();
+		}
+		
+		
+		//使用奇妙技巧重构数组
+		//技巧1.先将权限数组下标用权限的auth_id替换了
+		$auth_1 = [];
+		foreach($auth as $v){
+			$auth_1[$v['auth_id']] = $v;
+		}
+		//技巧2.将权限数组根据pid也就是父级权限id进行分组重组
+		$auth_2 = [];
+		foreach($auth as $v){
+			$auth_2[$v['pid']][] = $v['auth_id'];
+		}
+		
+		//将权限存入session
+		session('user_auth_info',$auth_1);
+		session('user_auth',$auth_2);
+		
 	}
 	
 }

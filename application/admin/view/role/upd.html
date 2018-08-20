@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="{:config('static_admin')}/css/style.css" rel="stylesheet" type="text/css" />
+    <script language="JavaScript" src="{:config('static_admin')}/js/jquery.js"></script>
+    <style>
+        .active{
+            border-bottom: solid 3px #66c9f3;
+        }
+        .box th, .box td{border: 1px solid #ccc;}
+		.box b{color:blue;}
+		li{list-style: none;}
+		.box .ul_f{float:left;} 
+		.box .son{padding-left: 10px;}
+    </style>
+</head>
+
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">表单</a></li>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span class="active">编辑角色</span>
+        </div>
+        <form action="" method="post">
+            <ul class="forminfo">
+                <li>
+                    <label>角色名</label>
+                    <input name="role_name" value="{$role['role_name']}" placeholder="请输权限名" type="text" class="dfinput" /><i>名称不能超过30个字符</i>
+                </li>
+                <li>分配权限：</li>
+                <!--循环一级权限-->
+                <?php foreach($auth_2[0] as $one): ?>
+                <li>
+					<table width="600px" border="1px" rules="all" class="box">
+						<tr>
+							<th>
+								<input onclick="all_select(this)" type="checkbox" value='<?php echo $auth_1[$one]["auth_id"];?>' name="auth_ids_list[]"><?php echo $auth_1[$one]['auth_name'];?>
+							</th>
+							<td>
+							<!--循环二级权限-->
+							<?php foreach($auth_2[$one] as $two): ?>
+								<ul class="ul_f">
+									<b><input onclick="all_select(this);up_select(this,'1')" value='<?php echo $auth_1[$two]["auth_id"];?>' type="checkbox" name="auth_ids_list[]"><?php echo $auth_1[$two]['auth_name']; ?></b>
+									<ul>
+										<!--循环三级权限,注意：进行三级循环时,这里要先判断上一个二级权限下是否有三级权限,没有则这个元素不会存在-->
+										<?php if(isset($auth_2[$two])) foreach($auth_2[$two] as $three){ ?>
+										<li class="son"><input onclick="up_select(this,'2,1');" value='<?php echo $auth_1[$three]["auth_id"];?>' type="checkbox"  name="auth_ids_list[]"><?php echo $auth_1[$three]['auth_name']; ?></li>
+										<?php }?>
+									</ul>
+								</ul>
+								<?php endforeach; ?>
+							</td>
+						</tr>
+					</table>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+            <label>&nbsp;</label>
+            <input name="" id="btnSubmit" type="submit" class="btn" value="添加" />
+            <input name="role_id" value="{$role['role_id']}" type="hidden" />
+        </form>
+    </div>
+</body>
+<script>
+	//设置编辑角色权限的默认值
+	var ids = "{$role['auth_ids_list']}";
+	ids=ids.split(',');
+	console.log(ids);
+	//val的值如果是个数组就表示选中对应值的复选框
+	$("input[type='checkbox']").val(ids);  //让其默认选中
+	
+	
+    function all_select(obj){
+			$(obj).parent().next().find('input').prop('checked',obj.checked);
+		}
+		function up_select(obj,pid){
+			//选中上级
+			var arr = pid.split(','); // [1,5]
+			for(var k in arr){
+				$('input[value='+arr[k]+']').prop('checked',true);
+			}
+			//二级和三级都没选中则把一级取消选中
+			var length = $(obj).parents("td").find('input:checked').length;
+			var one_input = $(obj).parents("tr").find('th>input');
+			length > 0 || one_input.prop('checked',false);
+		}
+</script>
+
+</html>

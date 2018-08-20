@@ -17,8 +17,13 @@ class IndexController extends CommonController{
 	//left
 	public function left(){
 		
-		
-		return $this->fetch();
+		$auth_info = session('user_auth_info');
+		$auth = session('user_auth');
+		//halt($auth);
+		return $this->fetch('',[
+			'auth_info'=>$auth_info,
+			'auth'=>$auth
+		]);
 	}
 	//main
 	public function main(){

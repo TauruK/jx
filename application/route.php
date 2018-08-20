@@ -39,5 +39,8 @@ Route::group('admin',function(){
 	Route::any('auth/upd','admin/auth/upd');
 	
 	//角色相关路由
+	Route::get('role/index','admin/role/index');
 	Route::any('role/add','admin/role/add');
+	Route::any('role/upd','admin/role/upd');
+	
 });

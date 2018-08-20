@@ -31,6 +31,15 @@
                     <label>用户名</label>
                     <input name="username" placeholder="请输入商品名称" type="text" class="dfinput" /><i>名称不能超过30个字符</i>
                 </li>
+                 <li>
+                    <label>分配角色</label>
+                    <select name="role_id" class="dfinput">
+                    	<option value="">--------请选择一个角色---------</option>
+                    	{foreach name='role' item='roles'}
+                    	<option value="{$roles['role_id']}">{$roles['role_name']}</option>
+                    	{/foreach}
+                    </select>
+                </li>
                 <li>
                     <label>用户密码</label>
                     <input name="password" placeholder="请输入商品价格" type="text" class="dfinput" /><i></i>

@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 use app\admin\model\User;
+use app\admin\model\Role;
 class UserController extends CommonController{
 	
 	//用户列表页
@@ -8,7 +9,11 @@ class UserController extends CommonController{
 		
 		//调用模型
 		$userModel = new User();
-		$users = $userModel->paginate(2);
+		$users = $userModel
+						->field('t1.*,t2.role_name')
+						->alias('t1')
+						->join('jx_role t2','t1.role_id=t2.role_id','left')
+						->paginate(2);
 		
 		return $this->fetch('',[
 			'users' => $users
@@ -40,7 +45,11 @@ class UserController extends CommonController{
 			}
 		}
 		
-		return $this->fetch();
+		//查询所有角色
+		$role = Role::select();
+		return $this->fetch('',[
+			'role' => $role
+		]);
 	}
 	
 	//用户编辑页
@@ -55,12 +64,12 @@ class UserController extends CommonController{
 			$post = input('post.');
 			//3.验证数据
 			//如果密码和确认密码都没填就表示不修改密码，不需要验证
-			if(!empty($post['password']) || !empty($post['repassword'])){
+			if(!empty($post['password']) || !empty($post['repassword']) || empty($post['role_id'])){
 				//如果密码和确认密码其中有填一个就表示要验证
-				$result = $this->validate($post,'User.upd',[],true);
+				$result = $this->validate($post,'User.upd');
 				if($result !== true){
 					//验证不通过
-					$this->error(implode(',', $result));
+					$this->error($result);
 				}
 			}
 			//验证通过，数据入库
@@ -77,8 +86,11 @@ class UserController extends CommonController{
 		$user_id = input('user_id');
 		//查询用户数据
 		$user = $userModel->find($user_id);
+		//查询所有角色
+		$role = Role::select();
 		return $this->fetch('',[
-			'user' => $user
+			'user' => $user,
+			'role' => $role
 		]);
 	}
 	

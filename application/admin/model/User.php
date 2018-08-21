@@ -64,9 +64,13 @@ class User extends Model{
 		if($role['auth_ids_list'] == '*'){
 			//查询出所有权限信息
 			$auth = Auth::select()->toArray();
+			//将权限存入session,*为所有权限标记
+			session('is_super','*');
 		}else{
 			//不是超级管理员查询出此用户的所属权限
 			$auth = Auth::where('auth_id','in',$role['auth_ids_list'])->select()->toArray();
+			//将权限存入session,-为非超级管理员权限标记
+			session('is_super','-');
 		}
 		
 		

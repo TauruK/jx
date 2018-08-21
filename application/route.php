@@ -43,4 +43,24 @@ Route::group('admin',function(){
 	Route::any('role/add','admin/role/add');
 	Route::any('role/upd','admin/role/upd');
 	
+	/**********************商品管理相关路由***********************************/
+	//商品类型路由
+	Route::get('type/index','admin/type/index');
+	Route::any('type/add','admin/type/add');
+	Route::any('type/upd','admin/type/upd');
+	
+	//类型属性路由
+	Route::get('attribute/index','admin/attribute/index');
+	Route::any('attribute/add','admin/attribute/add');
+	Route::any('attribute/upd','admin/attribute/upd');
+	
+	//商品分类路由
+	Route::get('category/index','admin/category/index');
+	Route::any('category/add','admin/category/add');
+	Route::any('category/upd','admin/category/upd');
+	
+	//商品添加路由
+	Route::get('goods/index','admin/goods/index');
+	Route::any('goods/add','admin/goods/add');
+	Route::any('goods/upd','admin/goods/upd');
 });

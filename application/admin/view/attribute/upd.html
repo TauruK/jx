@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="{:config('static_admin')}/css/style.css" rel="stylesheet" type="text/css" />
+    <script language="JavaScript" src="{:config('static_admin')}/js/jquery.js"></script>
+    <style>
+        .active{
+            border-bottom: solid 3px #66c9f3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">表单</a></li>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span class="active">编辑属性</span>
+        </div>
+        <form action="" method="post">
+            <ul class="forminfo">
+                <li>
+                    <label>属性名称</label>
+                    <input name="attr_name" value="{$attr['attr_name']}" placeholder="请输入属性名称" type="text" class="dfinput" /><i></i>
+                </li>
+                <li>
+                    <label>选择商品类型</label>
+                    <select name="type_id" class="dfinput">
+                    <option value="">请选择商品类型</option>
+                    {foreach name='types' item="v"}
+                        <option value="{$v['type_id']}">{$v['type_name']}</option>
+                    {/foreach}
+                    </select>
+                </li>
+                <li>
+                    <label>属性类型</label>
+                    <input type="radio" name="attr_type" value='0' checked='checked'> 唯一属性
+                    <input type="radio" name="attr_type" value='1'> 单选属性
+                </li>
+                 <li>
+                    <label>录入方式</label>
+                    <input type="radio" name="attr_input_type" value='0' checked='checked'> 手工输入
+                    <input type="radio" name="attr_input_type" value='1' > 列表选择
+                </li>
+                <li>
+                    <label>属性值</label>
+                    <textarea name="attr_values" class="textinput" placeholder="多个值用|隔开">{$attr['attr_values']}</textarea>
+                    <i>多个值用|隔开</i>
+                </li>
+            </ul>
+			<li>
+                <label>&nbsp;</label>
+                <input name="" id="btnSubmit" type="submit" class="btn" value="保存编辑" />
+            	<input type="hidden" name="attr_id" value="{$attr['attr_id']}" /> 
+			</li>
+        </form>
+    </div>
+</body>
+<script>
+	//让对应的属性类型和属性录入方式的单选框默认选中
+    var attr_type= "{$attr['attr_type']}";
+    var attr_input_type= "{$attr['attr_input_type']}";
+    var type_id= "{$attr['type_id']}";
+    $("input[name='attr_type'][value="+attr_type+"]").attr('checked',true);
+    $("input[name='attr_input_type'][value="+attr_input_type+"]").attr('checked',true);
+
+    //属性录入方式为0禁用文本域 1改为可用
+    $("textarea[name='attr_values']").attr('disabled',attr_input_type == '1' ? false : true);
+
+    //让属性的所属商品类型默认选中
+    $("select[name='type_id']").val(type_id);
+	
+    //默认是禁用
+    //$("textarea[name='attr_values']").attr('disabled',true);
+    $("input[name='attr_input_type']").click(function(){
+        if($(this).val() == 0){
+            //手工输入
+            $("textarea[name='attr_values']").attr('disabled',true).val(''); //不可用且清空值
+        }else{
+            //列表选择
+            $("textarea[name='attr_values']").attr('disabled',false); //可用
+        }
+    });
+
+
+</script>
+
+</html>

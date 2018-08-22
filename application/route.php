@@ -14,7 +14,15 @@ use think\Route;
 
 /************rule分组批量路由注册(推荐用这种)***********************/
 //网站首页
-Route::get('/','admin/index/index');
+Route::get('/','home/index/index');
+//路由分组,前台路由
+Route::group('home',function(){
+	//前台首页路由
+	Route::get('index/index','home/index/index');
+	
+});
+
+/*******************************************************************************/
 //路由分组,后台路由
 Route::group('admin',function(){
 	//后台首页路由
@@ -63,4 +71,5 @@ Route::group('admin',function(){
 	Route::get('goods/index','admin/goods/index');
 	Route::any('goods/add','admin/goods/add');
 	Route::any('goods/upd','admin/goods/upd');
+	Route::any('goods/getTypeAttr','admin/goods/getTypeAttr');  //ajax动态显示商品类型路由
 });

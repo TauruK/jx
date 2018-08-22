@@ -34,7 +34,7 @@
             <span>商品描述</span>
 
         </div>
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             <ul class="forminfo">
                 <li>
                     <label>商品名称</label>
@@ -96,15 +96,19 @@
 
             <ul class="forminfo">
                 <li>
-                    <label>商品属性</label>
-                    <input name="" placeholder="请输入商品名称" type="text" class="dfinput" /><i>名称不能超过30个字符</i>
+                    <label>商品类型</label>
+                    <select name="type_id" class="dfinput">
+                    	<option value="">请选择商品类型</option>
+                    	{foreach name='typeData' item='type'}
+                    	<option value="{$type['type_id']}">{$type['type_name']}</option>
+                    	{/foreach}
+                    </select>
                 </li>
             </ul>
 
             <ul class="forminfo">
                 <li>
-                    <label>商品相册</label>
-                    <input name="" placeholder="请输入商品名称" type="text" class="dfinput" /><i>名称不能超过30个字符</i>
+                	<a href="javascript:" onclick="addGoodsImg(this);">[+]</a>&nbsp;商品图片&nbsp;<input name="goodsImg[]" type="file" />
                 </li>
             </ul>
 
@@ -122,6 +126,81 @@
     </div>
 </body>
 <script>
+	/********************使用ajax动态显示类型属性************/
+	$("select[name='type_id']").change(function(){
+		var type_id = $("select[name='type_id']").val();
+		var html='';
+		//如果有选择类型
+		if(type_id!=''){
+			$.get("{:url('/admin/goods/getTypeAttr')}",{"type_id":type_id},function(res){
+				//如果res没有数据返回则为null，判断是否有类型属性数据返回
+				if(res){
+					//有数据则循环处理数据
+					for(var i=0;i<res.length;i++){
+						//定义一个表示区别单选与唯一属性的字符用于构建表单名
+						var single='';  //默认为空,表示唯一
+						html+="<li>";
+						//判断是属性是否为单选属性
+						if(res[i]['attr_type']==1){
+							html+="<a href='javascript:' onclick='addGoodsImg(this);'>[+]</a>";
+							console.log(res[i]);
+							single = '[]';
+						}
+						html+=res[i]['attr_name'];
+						//判断属性值输入方式是否为列表选择
+						if(res[i]['attr_input_type']==1){
+							//属性值是列表选择，使用split将字符串炸开
+							var attrs = res[i]['attr_values'].split('|');
+							html+="<select name='attr["+res[i]['attr_id']+"]"+single+"' class='dfinput'>";
+							//循环输出每一项的值
+							for(var j=0;j<attrs.length;j++){
+								html+="<option>";
+								html+=attrs[j];
+								html+="</option>";
+							}
+							html+="</select>";
+						}else{
+							//如果为手工输入
+							html+="<input name='attr["+res[i]['attr_id']+"]"+single+"' type='text' class='dfinput' />";
+						}
+						
+						
+						//判断是属性是否为单选属性
+						if(res[i]['attr_type']==1){
+							html+="&nbsp;&nbsp;属性价格&nbsp;&nbsp;";
+							html+="<input name='price["+res[i]['attr_id']+"][]' type='text' class='dfinput' style='width:100px' />";
+						}
+						
+						
+						html+="</li>";
+					}
+					$("select[name='type_id']").parent('li').after(html);
+				}
+			},'json');
+		}else{
+			//如果没有选择类型,清空第一li后面的所有同辈li
+			$("select[name='type_id']").parent('li').nextAll('li').remove();
+		}
+		
+	});
+</script>
+<script>
+		/*************商品相册***************/
+		function addGoodsImg(imgInput){
+			if($(imgInput).text()=='[+]'){
+				$newImg = $(imgInput).parent('li').clone(true);
+				$newImg.children('input').val('');   //注意这里每次新增一个li元素时要清空li里的input的值
+				$newImg.children('a').text('[-]');
+				$(imgInput).parent('li').after($newImg);
+			}else{
+				//如果点击的是[-],删除这个元素
+				$(imgInput).parent('li').remove();
+			}
+			
+		}
+</script>
+
+<script>
     //初始化富文本编辑器
    var ue = UE.getEditor('goods_desc');
     $(".formtitle span").click(function(event){
@@ -131,5 +210,4 @@
     });
      $(".formtitle span").eq(0).click();
 </script>
-
 </html>

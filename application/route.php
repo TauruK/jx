@@ -13,12 +13,26 @@
 use think\Route;
 
 /************rule分组批量路由注册(推荐用这种)***********************/
+//测试控制器路由
+Route::get('home/test/test/:id/:name','home/test/test');
 //网站首页
 Route::get('/','home/index/index');
 //路由分组,前台路由
 Route::group('home',function(){
 	//前台首页路由
 	Route::get('index/index','home/index/index');
+	
+	//public控制器路由
+	Route::any('public/register','home/public/register');
+	Route::any('public/login','home/public/login');
+	Route::get('public/logout','home/public/logout');
+	//短信发送路由
+	Route::get('public/sendSMS','home/public/sendSMS');
+	//找回密码路由
+	Route::any('public/find','home/public/find');
+	//密码重置
+	Route::any('public/change/:member_id/:token/:time','home/public/change');
+	
 	
 });
 

@@ -22,7 +22,7 @@ class AttributeController extends CommonController{
 							->alias('t1')
 							->where($screen)
 							->join('jx_type t2','t1.type_id=t2.type_id','left')
-							->paginate(10);
+							->paginate(100);
 		
 		return $this->fetch('',[
 			'attributes' => $attributes

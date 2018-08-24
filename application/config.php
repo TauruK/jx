@@ -16,7 +16,7 @@ return [
 
     //定义前台资源路径
 	'static_home' => '/static/home',
-	//添加后台密码加密盐
+	//定义应用统一密码加密盐
 	'password_salt' => 'sf%%saf',
 	
 	

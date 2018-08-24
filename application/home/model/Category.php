@@ -23,5 +23,36 @@ class Category extends Model{
 		return $newCat;
 	}
 	
+	//获取首页导航分类
+	public function getNavCat(){
+		
+		return Category::where('is_show','1')
+				->where('pid','0')
+				->select()
+				->toArray();
+	}
+	
+	//获取首页所有分类
+	public function getCatAll(){
+		
+		//先查询出所有分类
+		$catAll = Category::select()->toArray();
+		//使用奇营技巧重组分类
+		$catInfo = [];
+		foreach($catAll as $v){
+			$catInfo[$v['cat_id']] = $v;
+		}
+		
+		$catMap = [];
+		foreach($catAll as $v){
+			$catMap[$v['pid']][] = $v['cat_id'];
+		}
+		//返回重组后的分类数据
+		return [
+			'catInfo'=>$catInfo,
+			'catMap'=>$catMap
+		];
+	}
+	
 }
 ?>

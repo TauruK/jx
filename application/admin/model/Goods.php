@@ -79,7 +79,7 @@ class Goods extends Model{
 			//3.循环转移图片
 			foreach($file as $v){
 				// 移动到框架应用根目录/uploads/ 目录下
-				$info = $v->validate($check)->move('./upload');
+				$info = $v->validate($check)->move('./upload/goods');
 				if($info){
 					//转移图片成功，获取上传信息，并将图片路径保存到数组中
 					$oriImgPath[]=str_replace('\\', '/', $info->getSaveName());
@@ -103,18 +103,18 @@ class Goods extends Model{
 			//循环处理图片,生成中图middle与小图small
 			foreach($oriImg as $v){
 				//打开图片资源
-				$img = Image::open('./upload/'.$v);
+				$img = Image::open('./upload/goods/'.$v);
 				//构建中图保存路径
 				$arr = explode('/', $v);
 				$mid_imgPath = $arr[0].'/'.'middle_'.$arr[1];   //中图路径
 				$small_imgPath = $arr[0].'/'.'small_'.$arr[1];  //小图路径
 				
 				// 按照原图的比例生成一个最大为350*350的中图缩略图并保存
-				$img->thumb(350, 350,2)->save('./upload/'.$mid_imgPath);
+				$img->thumb(350, 350,2)->save('./upload/goods/'.$mid_imgPath);
 				$middleImg[] = $mid_imgPath;
 				
 				// 按照原图的比例生成一个最大为50*50的小图缩略图并保存
-				$img->thumb(50, 50,2)->save('./upload/'.$small_imgPath);
+				$img->thumb(50, 50,2)->save('./upload/goods/'.$small_imgPath);
 				$smallImg[] = $small_imgPath;
 				
 			}

@@ -59,6 +59,11 @@
                     <th>商品图片</th>
                     <th>商品价格</th>
                     <th>商品库存</th>
+                    <th>是否上架</th>
+                    <th>是否新品</th>
+                    <th>是否推荐</th>
+                    <th>是否热卖</th>
+                    <th>是否在回收站</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -71,9 +76,14 @@
                     <td>{$key+1}</td>
                     <td>{$goods['goods_name']}</td>
                     <td>{$goods['cat_name']}</td>
-                    <td><img src="/upload/{:json_decode($goods['goods_thumb'])[0]}" /></td>
+                    <td><img src="/upload/goods/{:json_decode($goods['goods_thumb'])[0]}" /></td>
                     <td>{$goods['goods_price']}</td>
                     <td>{$goods['goods_number']}</td>
+                    <td><?php echo $goods['is_sale']?'是':'否'; ?></td>
+                    <td><?php echo $goods['is_new']?'是':'否'; ?></td>
+                    <td><?php echo $goods['is_best']?'是':'否'; ?></td>
+                    <td><?php echo $goods['is_hot']?'是':'否'; ?></td>
+                    <td><?php echo $goods['is_delete']?'是':'否'; ?></td>
                     <td >
                         <a href="{:url('/admin/goods/upd',['goods_id'=>$goods['goods_id']])}" class="tablelink">编辑
                         </a> 

@@ -54,5 +54,37 @@ class Category extends Model{
 		];
 	}
 	
+	/*******************根据当前分类id找出其所有父级*************************/
+	public function getParentCats($cats,$cat_id){
+		
+		static $parentCats = [];
+		foreach($cats as $k => $v){
+			//根据当前分类id找出其所有父级
+			if($v['cat_id']==$cat_id){  //第一次调用时，会把本身加入这个数组
+				$parentCats[] = $v;
+				unset($cats[$k]);
+				$this->getParentCats($cats,$v['pid']);
+			}
+		}
+		
+		//反转数组后返回
+		 return array_reverse($parentCats);
+	}
+	
+	//查询出当前分类及其子子分类id
+	public function getChildCats($cats,$cat_id){
+		
+		static $childCat_id = [];
+		foreach($cats as $k => $v){
+			if($cat_id == $v['pid']){
+				$childCat_id[] = $v['cat_id'];
+				unset($cats[$k]);
+				$this->getChildCats($cats,$v['cat_id']);
+			}
+		}
+		//返回筛选出的分类id
+		return $childCat_id;
+	}
+	
 }
 ?>

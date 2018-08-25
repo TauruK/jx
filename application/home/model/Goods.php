@@ -18,5 +18,27 @@ class Goods extends Model{
 								->select()
 								->toArray();
 	}
+	
+	//添加商品浏览记录功能
+	public static function addGoodsHistory($goods_id){
+		
+		//1.先从cookie中获取商品id,判断cookie中是否有数据
+		$history = cookie('goods_history')?cookie('goods_history'):[];
+		
+		//2.在数组开头插入一个或多个单元
+		array_unshift($history,$goods_id);
+		//3.过滤重复值
+		$history = array_unique($history);
+		//4.判断数组元素是否大于5
+		if(count($history)>5){
+			//弹出数组最后一个单元（出栈）
+			array_pop($history);
+		}
+		
+		//5.将最新浏览记录存入cookie
+		cookie('goods_history',$history,3600*24*7);
+		//halt(cookie('goods_history'));
+		
+	}
 }
 ?>

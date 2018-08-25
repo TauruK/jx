@@ -33,6 +33,11 @@ Route::group('home',function(){
 	//密码重置
 	Route::any('public/change/:member_id/:token/:time','home/public/change');
 	
+	//分类列表页路由
+	Route::any('list/index','home/list/index');
+	//商品详情页
+	Route::any('goods/details','home/goods/details');
+	
 	
 });
 

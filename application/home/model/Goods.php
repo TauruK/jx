@@ -18,7 +18,7 @@ class Goods extends Model{
 								->select()
 								->toArray();
 	}
-	
+
 	//添加商品浏览记录功能
 	public static function addGoodsHistory($goods_id){
 		
@@ -40,5 +40,7 @@ class Goods extends Model{
 		//halt(cookie('goods_history'));
 		
 	}
+	
+
 }
 ?>

@@ -23,6 +23,11 @@ class PublicController extends Controller{
 			$loginInfo = Member::memberLoginCheck($post['username'],$post['password']);
 			if($loginInfo === true){
 				//登录成功
+				//判断用户是否是从添加购物车方式过来的
+				$goods_id = input('goods_id');
+				if($goods_id){
+					$this->success('登录成功哟~',url('/home/goods/details',['goods_id'=>$goods_id]));
+				}
 				$this->success('登录成功哟~','/');
 			}else{
 				//验证不通过

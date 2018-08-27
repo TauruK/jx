@@ -3,6 +3,7 @@ namespace app\home\controller;
 use think\Controller;
 use app\home\model\Category;
 use app\home\model\Goods;
+use \cart\Cart;
 use think\Db;
 class GoodsController extends Controller{
 	
@@ -59,6 +60,7 @@ class GoodsController extends Controller{
 		
 		//halt($GoodsAttrOnly);
 		
+		
 		return $this->fetch('',[
 			'parentCats' => $parentCats,      //面包宵分类
 			'goods' => $goods,                //商品信息
@@ -69,6 +71,45 @@ class GoodsController extends Controller{
 			'GoodsAttrOnly' => $GoodsAttrOnly,     //商品唯一属性
 			'goodsHistory' => $goodsHistory        //商品浏览记录
 		]);
+	}
+	
+	
+	//商品加入购物车功能
+	public function addGoodsToCart(){
+		//1.判断用户是否登录
+		if(!session("member_id")){
+			echo json_encode([
+				'code'=>-1,
+				'msg'=>'登录后才能加入购物车哦~'
+			]);
+			exit;
+		}
+	
+		//2.判断是否是ajax请求
+		if(request()->isAjax()){
+			//3.接收参数
+			$goods_id = input('goods_id');
+			$goods_attr_ids = input('goods_attr_ids');
+			$goods_number = input('goods_number');
+			//实例化购物车模型
+			$cart = new Cart();
+			//将商品添加到购物车
+			$re = $cart->add($goods_id,$goods_attr_ids,$goods_number);
+			if($re){
+				echo json_encode([
+					'code'=>200,
+					'msg'=>'加入购物车成功'
+				]);
+				exit;
+			}else{
+				echo json_encode([
+					'code'=>-2,
+					'msg'=>'加入购物车失败,请稍后在试'
+				]);
+				exit;
+			}
+		}
+		
 	}
 	
 	

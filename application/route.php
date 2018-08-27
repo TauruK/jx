@@ -37,7 +37,16 @@ Route::group('home',function(){
 	Route::any('list/index','home/list/index');
 	//商品详情页
 	Route::any('goods/details','home/goods/details');
+	//在商品页里加入购物车
+	Route::any('goods/addGoodsToCart','home/goods/addGoodsToCart');
 	
+	//购物车相关路由
+	Route::any('cart/clearing','home/cart/clearing');
+	Route::any('cart/incGoodsNum','home/cart/incGoodsNum');
+	Route::any('cart/decGoodsNum','home/cart/decGoodsNum');
+	Route::any('cart/inputGoodsNum','home/cart/inputGoodsNum');
+	Route::any('cart/cartGoodsDel','home/cart/cartGoodsDel');
+	Route::any('cart/clearGoodsCart','home/cart/clearGoodsCart');
 	
 });
 

@@ -18,6 +18,7 @@
 	<script type="text/javascript" src="{:config('static_home')}/js/header.js"></script>
 	<script type="text/javascript" src="{:config('static_home')}/js/goods.js"></script>
 	<script type="text/javascript" src="{:config('static_home')}/js/jqzoom-core.js"></script>
+	<script src="/plugins/layer/layer.js"></script>
 	
 	<!-- jqzoom 效果 -->
 	<script type="text/javascript">
@@ -519,7 +520,7 @@
 									<dt>{$attrGroup[0]['attr_name']}：</dt>
 									<dd>
 										{foreach name='attrGroup' key='k' item="attr"}
-										<a class="<?php echo $k?'':'selected';?>" href="javascript:;">{$attr['attr_value']} <input type="radio" name="color" value="{$attr['attr_value']}" checked="<?php echo $k?'':'checked';?>" /></a>
+										<a goods_attr_id="{$attr['goods_attr_id']}" class="<?php echo $k?'':'selected';?>" href="javascript:;">{$attr['attr_value']} <input type="radio" name="color" value="{$attr['attr_value']}" checked="<?php echo $k?'':'checked';?>" /></a>
 										{/foreach}
 										<input type="hidden" name="" value="" />
 									</dd>
@@ -541,7 +542,7 @@
 								<dl>
 									<dt>&nbsp;</dt>
 									<dd>
-										<input type="submit" value="" class="add_btn" />
+										<input id="addCart" type="button" value="" class="add_btn" />
 									</dd>
 								</dl>
 							</li>
@@ -899,7 +900,41 @@
 		</p>
 	</div>
 	<!-- 底部版权 end -->
-
+	<script>
+		//加入购物车
+		$("#addCart").click(function(){
+			//构建请求参数
+			var goods_number = $("input[name='amount']").val();
+			var selectAttr = $("li.product a.selected");  //获取所有选中的单选属性
+			var goods_attr_ids = [];
+			for(var i=0;i<selectAttr.length;i++){
+				goods_attr_ids[i] = selectAttr[i].getAttribute('goods_attr_id');  //将所有选中的单选属性值存入数组
+			}
+			var param = {
+				'goods_id':{$goods['goods_id']},
+				'goods_attr_ids':goods_attr_ids.join(','),  //将数组转为字符串格式
+				'goods_number':goods_number
+			};
+			//发起ajax请求
+			$.get("{:url('/home/goods/addGoodsToCart')}",param,function(res){
+				
+				if(res.code==200){
+					layer.confirm('加入购物车成功~', {
+					  btn: ['前往结算','在逛逛吧'] //按钮
+					}, function(){
+					  location.href="{:url('/home/cart/clearing')}";
+					});
+				}else{
+					layer.confirm('官人需要登录后才能使用购物车哦~', {
+					  btn: ['马上登录','在看看'] //按钮
+					}, function(){
+					  location.href="{:url('/home/public/login',['goods_id'=>$goods['goods_id']])}";
+					});
+				}	
+			},'json');
+		});
+		
+	</script>
 	<script type="text/javascript">
 		document.execCommand("BackgroundImageCache", false, true);
 	</script>

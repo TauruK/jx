@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="{:config('static_admin')}/css/style.css" rel="stylesheet" type="text/css" />
+    <script language="JavaScript" src="{:config('static_admin')}/js/jquery.js"></script>
+    <style>
+        .active{
+            border-bottom: solid 3px #66c9f3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">表单</a></li>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span class="active">物流分配</span>
+        </div>
+        <form action="" method="post">
+            <ul class="forminfo">
+                <li>
+                    <label>订单号</label>
+                    <input name="order_id" value="{$order_id}" readonly="readonly" type="text" class="dfinput" />
+                </li>
+                <li>
+                    <label>物流公司</label>
+                    <select name="company" class="dfinput">
+                    	<option value="">------请选择物流公司--------</option>
+                    	<option value="yuantong">圆通</option>
+                    	<option value="shentong">申通</option>
+                    	<option value="zhongtong">中通</option>
+                    	<option value="yunda">韵达</option>
+                    	<option value="shunfeng">顺丰</option>
+                    	{/foreach}
+                    </select>
+                </li>
+                <li>
+                    <label>运单号</label>
+                    <input name="number" placeholder="物流运单号" type="text" class="dfinput" />
+                </li>
+            </ul>
+                    <label>&nbsp;</label>
+                    <input name="" id="btnSubmit" type="submit" class="btn" value="确定" />
+        </form>
+    </div>
+</body>
+</html>

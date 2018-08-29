@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="{:config('static_admin')}/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{:config('static_admin')}/css/page.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="{:config('static_admin')}/js/jquery.js"></script>
+    
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $(".click").click(function() {
+            $(".tip").fadeIn(200);
+        });
+
+        $(".tiptop a").click(function() {
+            $(".tip").fadeOut(200);
+        });
+
+        $(".sure").click(function() {
+            $(".tip").fadeOut(100);
+        });
+
+        $(".cancel").click(function() {
+            $(".tip").fadeOut(100);
+        });
+
+    });
+    </script>
+</head>
+
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">数据表</a></li>
+            <li><a href="#">基本内容</a></li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <div class="tools">
+            <ul class="toolbar">
+                <li><span><img src="{:config('static_admin')}/images/t01.png" /></span>添加</li>
+                <li><span><img src="{:config('static_admin')}/images/t02.png" /></span>修改</li>
+                <li><span><img src="{:config('static_admin')}/images/t03.png" /></span>删除</li>
+                <li><span><img src="{:config('static_admin')}/images/t04.png" /></span>统计</li>
+            </ul>
+        </div>
+        <table class="tablelist">
+            <thead>
+                <tr>
+                    <th>
+                        <input name="" type="checkbox" value="" id="checkAll" />
+                    </th>
+                    <th>订单号</th>
+                    <th>订单总价</th>
+                    <th>收货人信息</th>
+                    <th>下单时间</th>
+                    <th>付款状态</th>
+                    <th>发货状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            	{foreach name='orders' key='k' item='order'}
+                <tr>
+                    <td>
+                        <input name="" type="checkbox" value="" />
+                    </td>
+                    <td>{$order['order_id']}</td>
+                    <td>{$order['total_price']}</td>
+                    <td>{$order['receiver']}/{$order['address']}/{$order['phone']}</td>
+                    <td>{$order['create_time']}</td>
+                    <td>{:config('pay_status')[$order['pay_status']]}</td>
+                    <td>{:config('send_status')[$order['send_status']]}</td>
+                    <td>
+                    	{if $order['pay_status']==1 AND $order['send_status']==0}
+                    	<a href="{:url('/admin/order/updWuliu',['order_id'=>$order['order_id']])}" class="tablelink">分配物流</a>
+                    	{elseif $order['pay_status']==1 AND $order['send_status']==1}
+                    	<a class="showWuliu" com="{$order['company']}" nu="{$order['number']}" href="javascript:" class="tablelink">查看物流</a>
+                    	{/if}
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        <div class="pagination">
+            {$orders->render()}
+        </div>
+        
+    </div>
+    <script src="/plugins/layer/layer.js"></script>
+    <script>
+    	
+    	$(".showWuliu").click(function(){
+    		//获取物流公司
+    		var com = $(this).attr('com');
+    		//获取运单号
+    		var nu = $(this).attr('nu');
+    		//ajax代理请求跨域物流信息
+    		$.get("{:url('/admin/order/showWuliu')}",{'com':com,'nu':nu},function(res){
+    			
+    			layer.open({
+				  type: 2,
+				  skin: 'layui-layer-rim', //加上边框
+				  area: ['600px', '300px'], //宽高
+				  content: res
+				});
+    			
+    		},'text');
+    		
+    	});
+    	
+    </script>
+    <script type="text/javascript">
+        $('.tablelist tbody tr:odd').addClass('odd');
+    </script>
+</body>
+
+</html>

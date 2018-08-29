@@ -48,6 +48,15 @@ Route::group('home',function(){
 	Route::any('cart/cartGoodsDel','home/cart/cartGoodsDel');
 	Route::any('cart/clearGoodsCart','home/cart/clearGoodsCart');
 	
+	//订单路由
+	Route::any('order/commitOrder','home/order/commitOrder');
+	Route::any('order/orderUpd','home/order/orderUpd');
+	Route::any('order/openAlipay','home/order/openAlipay');
+	Route::any('order/pagepay','home/order/pagepay');
+	Route::any('order/return_url','home/order/return_url');
+	Route::any('order/notify_url','home/order/notify_url');
+	Route::any('order/orderList','home/order/orderList');
+	Route::any('order/orderPay','home/order/orderPay');
 });
 
 /*******************************************************************************/
@@ -100,4 +109,10 @@ Route::group('admin',function(){
 	Route::any('goods/add','admin/goods/add');
 	Route::any('goods/upd','admin/goods/upd');
 	Route::any('goods/getTypeAttr','admin/goods/getTypeAttr');  //ajax动态显示商品类型路由
+	
+	//订单路由
+	Route::get('order/index','admin/order/index');
+	Route::any('order/updWuliu','admin/order/updWuliu');
+	Route::any('order/showWuliu','admin/order/showWuliu');
+	
 });

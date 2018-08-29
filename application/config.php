@@ -19,6 +19,21 @@ return [
 	//定义应用统一密码加密盐
 	'password_salt' => 'sf%%saf',
 	
+	//定义订单支付状态
+	'pay_status' => [
+		0=>'<span style="color:red;">未付款</span>',
+		1=>'<span style="color:green;">已付款</span>'
+	],
+	
+	//定义订单物流状态
+	'send_status' => [
+		0=>'<span style="color:red;">未发货</span>',
+		1=>'<span style="color:green;">已发货</span>',
+		2=>'<span style="color:orange;">已收货</span>',
+		3=>'<span style="color:blue;">退货中</span>',
+		4=>'<span style="color:yellow;">退货成功</span>'
+	],
+	
 	
 	
 		

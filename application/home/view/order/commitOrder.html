@@ -2,17 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-	<title>购物车页面</title>
+	<title>填写核对订单信息</title>
 	<link rel="stylesheet" href="{:config('static_home')}/style/base.css" type="text/css">
 	<link rel="stylesheet" href="{:config('static_home')}/style/global.css" type="text/css">
 	<link rel="stylesheet" href="{:config('static_home')}/style/header.css" type="text/css">
-	<link rel="stylesheet" href="{:config('static_home')}/style/cart.css" type="text/css">
+	<link rel="stylesheet" href="{:config('static_home')}/style/fillin.css" type="text/css">
 	<link rel="stylesheet" href="{:config('static_home')}/style/footer.css" type="text/css">
 
 	<script type="text/javascript" src="{:config('static_home')}/js/jquery-1.8.3.min.js"></script>
-	<script type="text/javascript" src="{:config('static_home')}/js/cart1.js?v=1"></script>
-	<script src="/plugins/layer/layer.js"></script>
-	
+	<script type="text/javascript" src="{:config('static_home')}/js/cart2.js"></script>
+
 </head>
 <body>
 	<!-- 顶部导航 start -->
@@ -25,10 +24,10 @@
 	<div class="header w990 bc mt15">
 		<div class="logo w990">
 			<h2 class="fl"><a href="index.html"><img src="{:config('static_home')}/images/logo.png" alt="京西商城"></a></h2>
-			<div class="flow fr">
+			<div class="flow fr flow2">
 				<ul>
-					<li class="cur">1.我的购物车</li>
-					<li>2.填写核对订单信息</li>
+					<li>1.我的购物车</li>
+					<li class="cur">2.填写核对订单信息</li>
 					<li>3.成功提交订单</li>
 				</ul>
 			</div>
@@ -39,26 +38,65 @@
 	<div style="clear:both;"></div>
 
 	<!-- 主体部分 start -->
-	<div class="mycart w990 mt10 bc">
-		<h2><span>我的购物车</span></h2>
-		<table>
-			<thead>
-				<tr>
-					<th class="col1">商品名称</th>
-					<th class="col2">商品信息</th>
-					<th class="col3">单价</th>
-					<th class="col4">数量</th>	
-					<th class="col5">小计</th>
-					<th class="col6">操作</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php $totalPrice = 0;?>
+	<div class="fillin w990 bc mt15">
+		<div class="fillin_hd">
+			<h2>填写并核对订单信息</h2>
+		</div>
+
+		<div class="fillin_bd">
+			<!-- 收货人信息  start-->
+			<div class="address">
+				<div class="address_select">
+					<form action="{:url('/home/order/orderUpd')}" method="post"  name="address_form">
+						<ul>
+							<li>
+								<label for=""><span>*</span>收 货 人：</label>
+								<input type="text" name="receiver" class="txt" />
+							</li>
+							<li>
+								<label for=""><span>*</span>收货地址：</label>
+								<input type="text" name="address" class="txt" />
+							<li>
+								<label for=""><span>*</span>电话：</label>
+								<input type="text" name="phone" class="txt"  />
+							</li>
+							<li>
+								<label for=""><span>*</span>邮编：</label>
+								<input type="text" name="zcode" class="txt" />
+							</li>
+						</ul>
+					</form>
+					
+				</div>
+			</div>
+			<!-- 收货人信息  end-->
+
+			
+
+			<!-- 商品清单 start -->
+			<div class="goods">
+				<h3>商品清单</h3>
+				<table>
+					<thead>
+						<tr>
+							<th class="col1">商品</th>
+							<th class="col2">规格</th>
+							<th class="col3">价格</th>
+							<th class="col4">数量</th>
+							<th class="col5">小计</th>
+						</tr>	
+					</thead>
+					<tbody>
+						<?php 
+							$totalPrice = 0;
+							$goodsTotalNum = 0;
+						?>
 				<?php foreach($cartData as $k=>$cart):?>
 				<?php 
 					$danjia = $cart['goodsInfo']['goods_price']+$cart['attr']['attr_total_price']; 
 					$subtotal = $danjia*$cart['goods_number'];   
 					$totalPrice += $subtotal;
+					$goodsTotalNum += $cart['goods_number'];
 				?>
 				<tr>
 					<td class="col1">
@@ -70,24 +108,35 @@
 					<td class="col3">￥<span>{$danjia}</span></td>
 					<td class="col4"> 
 						<a dec="decGoods" href="javascript:;" class="reduce_num"></a>
-						<input goods_id={$cart['goods_id']} goods_attr_ids={$cart['goods_attr_ids']} type="text" name="amount" value="{$cart['goods_number']}" class="amount"/>
+						<span goods_id={$cart['goods_id']} goods_attr_ids={$cart['goods_attr_ids']} class="amount">{$cart['goods_number']}</span>
 						<a inc="incGoods" href="javascript:;" class="add_num"></a>
 					</td>
 					<td class="col5">￥<span class="xiaoji">{$subtotal}</span></td>
-					<td class="col6"><a class="del" href="javascript:">删除</a></td>
 				</tr>
 				<?php endforeach;?>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="6">购物金额总计： <strong>￥ <span id="total">{$totalPrice}</span></strong></td>
-				</tr>
-			</tfoot>
-		</table>
-		<div class="cart_btn w990 bc mt10">
-			<a href="/" class="continue">继续购物</a>
-			<a href="javascript:" class="continue" id="clearCatr">清空购物车</a>
-			<a href="{:url('/home/order/commitOrder')}" class="checkout">结 算</a>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="5">
+								<ul>
+									<li>
+										<span>{$goodsTotalNum} 件商品，总商品金额：</span>
+										<em>￥{$totalPrice}</em>
+									</li>
+								</ul>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<!-- 商品清单 end -->
+		
+		</div>
+
+		<div class="fillin_ft">
+			<a href="javascript:" id="orderPay"><span>提交订单</span></a>
+			<p>应付总额：<strong>￥{$totalPrice}</strong></p>
+			
 		</div>
 	</div>
 	<!-- 主体部分 end -->
@@ -121,65 +170,9 @@
 	<!-- 底部版权 end -->
 </body>
 <script>
-	//删除购物车商品
-	$("a.del").click(function(){
-		
-		if(!confirm('确定删除？')){
-			return false;
-		}
-		//请求参数
-		var amount = $(this).parents('tr').find(".amount");
-		var goods_id = $(amount).attr('goods_id');
-		var goods_attr_ids = $(amount).attr('goods_attr_ids');
-		var param = {
-			'goods_id':goods_id,
-			'goods_attr_ids':goods_attr_ids
-		};
-		
-		$.get('/home/cart/cartGoodsDel',param,function(res){
-			
-			if(res.code==200){
-				//计算总计金额
-				var total = parseFloat($("#total").text());  //总数
-				var xiaji = parseFloat(amount.parents('tr').find(".xiaoji").text());  //小计
-				
-				total = total - xiaji;
-				$("#total").text(total.toFixed(2));
-				$(amount).parents('tr').remove();
-				
-				//删除后搜索table下的元素是否都删了，是表示购物车已没有商品
-				if( $('table').find('tr').length<=2 ){
-					$('table tbody').html('<div style="height:300px;">空空如也，赶快去<a href="/">首页</a>逛逛吧~</div>');
-				}
-			}
-			
-		},'json');
-		
+	//指定表单提交
+	$("#orderPay").click(function(){
+		document.getElementsByName("address_form")[0].submit();
 	});
-	
-	/********************清空购物车*************************/
-	$("#clearCatr").click(function(){
-		
-		if(!confirm('确定删除？')){
-			return false;
-		}
-		$.get('/home/cart/clearGoodsCart',{},function(res){
-			
-			if(res.code==200){
-				//把总计金额置为0
-				$("#total").text(0);
-				//清空tbody里的商品元素
-				$("table tbody").html('');
-				//清空后给个提示
-				if( $('table').find('tr').length<=2 ){
-					$('table tbody').html('<div style="height:300px;font-size:30px;">空空如也，赶快去<a href="/" style="color:deepskyblue;">首页</a>逛逛吧~</div>');
-				}
-			}
-			
-			
-		},'json');
-		
-	});
-	
 </script>
 </html>

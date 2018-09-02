@@ -247,6 +247,43 @@ class PublicController extends Controller{
 	
 		return $this->fetch();
 	}
+
+
+/**************************************QQ登录************************************/
+	//QQ登录
+	public function qq(){
+		require_once(EXTEND_PATH."qqConnect/API/qqConnectAPI.php");
+		$qc = new \QC();
+		//唤起QQ登录
+		$qc->qq_login();
+	}
+
+
+
+	//QQ登录回调函数
+	public function qq_login(){
+		require_once EXTEND_PATH.'qqConnect/API/qqConnectAPI.php';
+		$qc = new \QC();
+		$openid = $qc->get_openid();   //获取openid  一个QQ应用  一个QQ对应一个openid
+		
+		//查询此用户是否用过QQ登录
+		if($member = Member::where('openid',$openid)->find()){
+			//有使用过QQ登录
+			session('member_id',$member['openid']);
+			session('member_username',$member['nickname']);
+			$this->success('官人你又来啦~','/');
+		}else{
+			//第一次使用QQ登录
+			$nickname = $qc->get_user_info()['nickname'];
+			//将用户QQ信息写入数据库
+			Member::create(['openid'=>$openid,'nickname'=>$nickname]);
+			$this->success('登录成功哟~','/');
+		}
+			
+	}
+	
+	
+	
 	
 }
 ?>

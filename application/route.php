@@ -26,6 +26,9 @@ Route::group('home',function(){
 	Route::any('public/register','home/public/register');
 	Route::any('public/login','home/public/login');
 	Route::get('public/logout','home/public/logout');
+	Route::any('public/qq','home/public/qq');                //唤起qq
+	Route::any('public/qq_login','home/public/qq_login');   //qq登录回调函数
+	
 	//短信发送路由
 	Route::get('public/sendSMS','home/public/sendSMS');
 	//找回密码路由

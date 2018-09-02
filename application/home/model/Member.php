@@ -12,18 +12,29 @@ class Member extends Model{
 		
 		//新增注册用户前钩子
         Member::event('before_insert', function ($member) {
-        	//密码加密
-        	$member['password'] = md5($member['password'].config('password_salt'));
+        	//判断是否是QQ登录
+        	if(!$member['openid']){  //没有则表示为账号密码注册，进行密码加密
+        		//密码加密
+        		$member['password'] = md5($member['password'].config('password_salt'));
+        	}
+        	
         });
 		
 		/*********************新增注册用户前钩子*****************/
 		
 		//新增注册用户后钩子
         Member::event('after_insert', function ($member) {
-        	
-			//将用户信息保存到session用于记录用户的登录状态
-			session('member_id',$member['member_id']);
-			session('member_username',$member['username']);
+        	//判断是否是QQ登录
+        	if(!$member['openid']){  //没有则表示为账号密码注册，进行密码加密
+				//将用户信息保存到session用于记录用户的登录状态
+				session('member_id',$member['member_id']);
+				session('member_username',$member['username']);
+			}else{
+				//QQ号登录，将用户信息保存到session用于记录用户的登录状态
+				session('member_id',$member['openid']);
+				session('member_username',$member['nickname']);
+			}
+			
         });
 		
 		/*********************新增注册用户前钩子*****************/
